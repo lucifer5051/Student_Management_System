@@ -1,0 +1,19 @@
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables & Local Settings
+.env
+.venv
+env/
+venv/
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# IDE & Editor Configs
+.vscode/
+.idea/
+*.swp
