@@ -58,7 +58,17 @@
                 </form>
 
                 <div class="text-center mt-3">
-                    <a href="#" onclick="forgotPasswordAlert()" class="text-decoration-none">Forgot Password?</a>
+                    <a href="#" onclick="forgotPasswordAlert()" class="text-decoration-none small text-muted">Forgot Admin Password?</a>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <h6 class="text-secondary mb-3">Student Access</h6>
+                    <a href="{% url 'student_login' %}" class="btn btn-outline-success w-100 mb-2 fw-semibold">Student Portal Login</a>
+                    <div>
+                        <a href="{% url 'student_register' %}" class="text-primary small text-decoration-none fw-semibold">New Student? Register Here &rarr;</a>
+                    </div>
                 </div>
             </div>
         </div>
