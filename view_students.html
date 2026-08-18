@@ -3,106 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Students - Student Management System</title>
+    <title>View Students - SMS Admin</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --dark-blue: #0a2540;
-            --light-bg: #f8f9fa;
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --bg-dark: #090d16;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-emerald: #10b981;
         }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--light-bg);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e1035 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            padding-bottom: 50px;
+        }
+
+        .glass-nav {
+            background: rgba(9, 13, 22, 0.7);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--card-border);
+            sticky: top;
+            z-index: 100;
+        }
+
+        .bento-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .avatar-sm {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-purple);
+        }
+
+        .avatar-placeholder-sm {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .glass-table {
+            color: #f8fafc;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        .glass-table th {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            padding: 12px 16px;
+        }
+
+        .glass-table td {
+            background: rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 14px 16px;
+        }
+
+        .glass-table tr td:first-child {
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .glass-table tr td:last-child {
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">SMS Admin Portal</a>
+    <!-- Top Navbar -->
+    <nav class="navbar glass-nav navbar-expand-lg py-3 mb-4">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand text-white fw-bold d-flex align-items-center gap-2" href="{% url 'dashboard' %}">
+                <i class="bi bi-shield-lock-fill text-purple fs-3" style="color: var(--accent-purple);"></i>
+                <span>SMS Admin<span class="text-purple" style="color: var(--accent-purple);">Portal</span></span>
+            </a>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'add_student' %}">Add Student</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'view_students' %}">View Students</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'search_student' %}">Search Student</a>
-                    </li>
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'dashboard' %}"><i class="bi bi-grid-1x2 me-1"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'add_student' %}"><i class="bi bi-person-plus me-1"></i> Add Student</a></li>
+                    <li class="nav-item"><a class="nav-link active text-white" href="{% url 'view_students' %}"><i class="bi bi-people me-1"></i> View Students</a></li>
+                    <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'search_student' %}"><i class="bi bi-search me-1"></i> Search</a></li>
                     <li class="nav-item ms-3">
-                        <a class="btn btn-outline-light btn-sm mt-1" href="{% url 'logout' %}" onclick="return confirmLogout()">Logout</a>
+                        <a class="btn btn-outline-danger btn-sm rounded-pill px-3" href="{% url 'logout' %}" onclick="return confirmLogout()"><i class="bi bi-box-arrow-right me-1"></i> Logout</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container my-5">
+    <div class="container-fluid px-4">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ message }}
+                <div class="alert alert-success border-0 bg-success bg-opacity-20 text-white rounded-3 p-3 mb-4">
+                    <i class="bi bi-check-circle me-2"></i> {{ message }}
                 </div>
             {% endfor %}
         {% endif %}
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="text-primary m-0">Registered Student Records</h3>
-            <a href="{% url 'add_student' %}" class="btn btn-success">+ Add Student</a>
+            <div>
+                <h3 class="fw-bold mb-1"><i class="bi bi-people-fill me-2 text-purple" style="color: var(--accent-purple);"></i>Registered Students</h3>
+                <p class="text-white-50 small mb-0">View, manage, edit, and inspect all student accounts</p>
+            </div>
+            <a href="{% url 'add_student' %}" class="btn btn-primary rounded-pill px-4" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); border: none;"><i class="bi bi-plus-lg me-1"></i> Add New Student</a>
         </div>
 
-        <div class="card shadow">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover m-0 align-middle">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Roll No</th>
-                                <th>Name</th>
-                                <th>Gender</th>
-                                <th>Department</th>
-                                <th>Year & Sem</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-                                <th class="text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for student in students %}
-                            <tr>
-                                <td>{{ student.id }}</td>
-                                <td>{{ student.roll_number }}</td>
-                                <td>{{ student.first_name }} {{ student.last_name }}</td>
-                                <td>{{ student.gender }}</td>
-                                <td>{{ student.department }}</td>
-                                <td>{{ student.year }}, {{ student.semester }}</td>
-                                <td>{{ student.phone }}</td>
-                                <td>{{ student.email }}</td>
-                                <td class="text-center">
-                                    <div class="d-flex gap-2 justify-content-center">
-                                        <a href="{% url 'student_profile' student.id %}" class="btn btn-sm btn-info text-white">Profile</a>
-                                        <a href="{% url 'update_student' student.id %}" class="btn btn-sm btn-primary">Edit</a>
-                                        <a href="{% url 'delete_student' student.id %}" class="btn btn-sm btn-danger" onclick="return confirmDelete('{{ student.roll_number }}')">Delete</a>
+        <div class="bento-card">
+            <div class="table-responsive">
+                <table class="table glass-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Roll Number</th>
+                            <th>Gender</th>
+                            <th>Department</th>
+                            <th>Academic Status</th>
+                            <th>Contact</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    {% if student.profile_image %}
+                                        <img src="{{ student.profile_image.url }}" class="avatar-sm" alt="{{ student.first_name }}">
+                                    {% else %}
+                                        <div class="avatar-placeholder-sm">
+                                            {{ student.first_name|slice:":1" }}{{ student.last_name|slice:":1" }}
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <strong class="text-white d-block">{{ student.first_name }} {{ student.last_name }}</strong>
+                                        <small class="text-white-50">{{ student.email }}</small>
                                     </div>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="9" class="text-center text-muted py-4">No student records found.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-white bg-opacity-10 text-white font-monospace fs-6 px-3 py-2">{{ student.roll_number }}</span></td>
+                            <td><span class="text-white-50">{{ student.gender }}</span></td>
+                            <td><span class="badge bg-purple bg-opacity-20 text-purple rounded-pill px-3 py-1" style="background: rgba(168, 85, 247, 0.2); color: var(--accent-purple);">{{ student.department }}</span></td>
+                            <td><small class="text-white-50 d-block">{{ student.year }}</small><span class="text-white small">{{ student.semester }}</span></td>
+                            <td><span class="text-white-50 small"><i class="bi bi-telephone me-1"></i> {{ student.phone }}</span></td>
+                            <td class="text-center">
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a href="{% url 'student_profile' student.id %}" class="btn btn-sm btn-outline-info rounded-pill px-3"><i class="bi bi-eye"></i> View</a>
+                                    <a href="{% url 'update_student' student.id %}" class="btn btn-sm btn-outline-warning rounded-pill px-3"><i class="bi bi-pencil"></i> Edit</a>
+                                    <a href="{% url 'delete_student' student.id %}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirmDelete('{{ student.roll_number }}')"><i class="bi bi-trash"></i> Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-white-50 py-5">
+                                <i class="bi bi-inbox fs-1 d-block mb-2 text-white-50"></i>
+                                No student records found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

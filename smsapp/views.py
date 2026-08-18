@@ -309,7 +309,7 @@ def student_login_view(request):
             else:
                 error_msg = "Invalid Roll Number or Password!"
                 
-    return render(request, 'student_login.html', {'error_msg': error_msg})
+    return render(request, 'index.html', {'error_msg': error_msg})
 
 def student_register_view(request):
     if request.method == 'POST':
