@@ -1,3 +1,204 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Attendance Records</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"><style>body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#f8f9fa}</style></head>
-<body><nav class="navbar navbar-dark bg-dark"><div class="container"><a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">SMS Admin Portal</a><a class="btn btn-outline-light btn-sm" href="{% url 'add_attendance' %}">Mark Attendance</a></div></nav><div class="container my-5">{% if messages %}{% for message in messages %}<div class="alert alert-success">{{ message }}</div>{% endfor %}{% endif %}<div class="d-flex justify-content-between mb-4"><h3 class="text-primary">Attendance Records</h3><a class="btn btn-success" href="{% url 'add_attendance' %}">Mark Today's Attendance</a></div><div class="card shadow mb-4"><div class="card-body"><h4 class="text-primary">Student Attendance Summary</h4><div class="table-responsive"><table class="table table-striped"><thead class="table-dark"><tr><th>Student</th><th>Roll Number</th><th>Present Days</th><th>Total Days</th><th>Percentage</th><th>Remark</th></tr></thead><tbody>{% for item in attendance_summary %}<tr><td>{{ item.student.first_name }} {{ item.student.last_name }}</td><td>{{ item.student.roll_number }}</td><td>{{ item.present_days }}</td><td>{{ item.total_days }}</td><td>{{ item.percentage }}%</td><td>{% if item.percentage < 75 and item.total_days > 0 %}<span class="text-danger fw-bold">Low Attendance</span>{% else %}<span class="text-success">Good</span>{% endif %}</td></tr>{% empty %}<tr><td colspan="6" class="text-center">No students found.</td></tr>{% endfor %}</tbody></table></div></div></div><div class="card shadow"><div class="card-body"><h4 class="text-primary">Date-wise Attendance Records</h4><div class="table-responsive"><table class="table table-striped"><thead class="table-dark"><tr><th>Date</th><th>Student</th><th>Roll Number</th><th>Status</th></tr></thead><tbody>{% for record in attendance_records %}<tr><td>{{ record.attendance_date }}</td><td>{{ record.student.first_name }} {{ record.student.last_name }}</td><td>{{ record.student.roll_number }}</td><td>{{ record.status }}</td></tr>{% empty %}<tr><td colspan="4" class="text-center">No attendance records found.</td></tr>{% endfor %}</tbody></table></div></div></div></div></body></html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Records - College Admin Portal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e1035 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            padding-bottom: 50px;
+        }
+
+        .glass-nav {
+            background: rgba(9, 13, 22, 0.7);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--card-border);
+            sticky: top;
+            z-index: 100;
+        }
+
+        .bento-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 24px;
+        }
+
+        .glass-table {
+            color: #f8fafc;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        .glass-table th {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            padding: 12px 16px;
+        }
+
+        .glass-table td {
+            background: rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 14px 16px;
+        }
+
+        .glass-table tr td:first-child {
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .glass-table tr td:last-child {
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <nav class="navbar glass-nav navbar-expand-lg py-3 mb-4">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand text-white fw-bold d-flex align-items-center gap-2" href="{% url 'dashboard' %}">
+                <i class="bi bi-shield-lock-fill text-purple fs-3" style="color: var(--accent-purple);"></i>
+                <span>College Admin<span class="text-purple" style="color: var(--accent-purple);">Portal</span></span>
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'dashboard' %}"><i class="bi bi-grid-1x2 me-1"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active text-white" href="{% url 'view_attendance' %}"><i class="bi bi-calendar-range me-1"></i> View Attendance</a></li>
+                    <li class="nav-item ms-3">
+                        <a class="btn btn-outline-danger btn-sm rounded-pill px-3" href="{% url 'logout' %}" onclick="return confirmLogout()"><i class="bi bi-box-arrow-right me-1"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success border-0 bg-success bg-opacity-20 text-white rounded-3 p-3 mb-4">
+                    <i class="bi bi-check-circle me-2"></i> {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold mb-1"><i class="bi bi-calendar-check me-2 text-info"></i>Attendance Records</h3>
+                <p class="text-white-50 small mb-0">Overview of student attendance statistics and daily logs</p>
+            </div>
+            <a class="btn btn-success rounded-pill px-4" href="{% url 'add_attendance' %}" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); border: none;"><i class="bi bi-plus-lg me-1"></i> Mark Today's Attendance</a>
+        </div>
+
+        <!-- Student Summary -->
+        <div class="bento-card">
+            <h5 class="fw-semibold text-white mb-3">Student Attendance Summary</h5>
+            <div class="table-responsive">
+                <table class="table glass-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Roll Number</th>
+                            <th>Present Days</th>
+                            <th>Total Days</th>
+                            <th>Percentage</th>
+                            <th>Remark</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in attendance_summary %}
+                        <tr>
+                            <td class="fw-semibold text-white">{{ item.student.first_name }} {{ item.student.last_name }}</td>
+                            <td><span class="badge bg-white bg-opacity-10 text-white font-monospace">{{ item.student.roll_number }}</span></td>
+                            <td class="text-success fw-bold">{{ item.present_days }}</td>
+                            <td class="text-white-50">{{ item.total_days }}</td>
+                            <td>
+                                <span class="badge bg-purple bg-opacity-20 text-purple rounded-pill px-3 py-1" style="background: rgba(168, 85, 247, 0.2); color: var(--accent-purple);">
+                                    {{ item.percentage }}%
+                                </span>
+                            </td>
+                            <td>
+                                {% if item.percentage < 75 and item.total_days > 0 %}
+                                    <span class="badge bg-danger bg-opacity-20 text-danger rounded-pill px-3 py-1"><i class="bi bi-exclamation-triangle me-1"></i> Low Attendance</span>
+                                {% else %}
+                                    <span class="badge bg-success bg-opacity-20 text-success rounded-pill px-3 py-1"><i class="bi bi-check-circle me-1"></i> Good</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" class="text-center text-white-50 py-4">No student attendance data found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Date-wise Logs -->
+        <div class="bento-card">
+            <h5 class="fw-semibold text-white mb-3">Date-wise Attendance Logs</h5>
+            <div class="table-responsive">
+                <table class="table glass-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Student</th>
+                            <th>Roll Number</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in attendance_records %}
+                        <tr>
+                            <td>{{ record.attendance_date }}</td>
+                            <td class="fw-semibold text-white">{{ record.student.first_name }} {{ record.student.last_name }}</td>
+                            <td><span class="badge bg-white bg-opacity-10 text-white font-monospace">{{ record.student.roll_number }}</span></td>
+                            <td>
+                                {% if record.status == 'Present' %}
+                                    <span class="badge bg-success bg-opacity-20 text-success rounded-pill px-3 py-1">Present</span>
+                                {% else %}
+                                    <span class="badge bg-danger bg-opacity-20 text-danger rounded-pill px-3 py-1">Absent</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center text-white-50 py-4">No attendance logs found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function confirmLogout() {
+            return confirm("Are you sure you want to log out?");
+        }
+    </script>
+</body>
+</html>
