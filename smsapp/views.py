@@ -321,29 +321,27 @@ def student_register_view(request):
         roll_number = request.POST.get('roll_number')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        gender = request.POST.get('gender')
-        dob = request.POST.get('dob')
         department = request.POST.get('department')
-        year = request.POST.get('year')
-        semester = request.POST.get('semester')
-        phone = request.POST.get('phone')
+        year = request.POST.get('year', '1')
         email = request.POST.get('email')
-        address = request.POST.get('address')
         password = request.POST.get('password')
         profile_image = request.FILES.get('profile_image')
         
-        if not all([roll_number, first_name, last_name, gender, dob, department, year, semester, phone, email, address, password]):
-            messages.error(request, "Error: All fields are required.")
+        # Optional fields with defaults
+        gender = request.POST.get('gender', 'Male')
+        dob = request.POST.get('dob', '2002-01-01')
+        semester = request.POST.get('semester', '1')
+        phone = request.POST.get('phone', '9876543210')
+        address = request.POST.get('address', 'College Campus')
+
+        if not all([roll_number, first_name, last_name, department, email, password]):
+            messages.error(request, "Error: Please fill in all required fields.")
             return render(request, 'student_register.html')
-            
-        if len(phone) != 10 or not phone.isdigit():
-            messages.error(request, "Error: Phone number must be exactly 10 numeric digits.")
-            return render(request, 'student_register.html')
-            
+
         if Student.objects.filter(roll_number=roll_number).exists():
             messages.error(request, f"Error: Student with Roll Number '{roll_number}' already exists.")
             return render(request, 'student_register.html')
-            
+
         student = Student.objects.create(
             roll_number=roll_number,
             first_name=first_name,
@@ -360,9 +358,9 @@ def student_register_view(request):
             profile_image=profile_image
         )
         request.session['student_id'] = student.id
-        messages.success(request, "Registration Successful! Welcome to your dashboard.")
+        messages.success(request, "Registration Successful! Welcome to your student portal.")
         return redirect('student_dashboard')
-        
+
     return render(request, 'student_register.html')
 
 def student_dashboard_view(request):

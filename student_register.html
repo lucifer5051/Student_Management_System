@@ -20,8 +20,8 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(127, 0, 255, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.12) 0%, transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(127, 0, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.1) 0%, transparent 40%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -32,28 +32,13 @@
 
         .auth-container {
             width: 100%;
-            max-width: 950px;
+            max-width: 900px;
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 28px;
+            border-radius: 24px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
             overflow: hidden;
         }
-
-        .mac-dots {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        .dot-red { background-color: #ff5f56; }
-        .dot-yellow { background-color: #ffbd2e; }
-        .dot-green { background-color: #27c93f; }
 
         .form-control-nickelfox, .form-select-nickelfox {
             background: rgba(255, 255, 255, 0.05);
@@ -99,53 +84,49 @@
 <body>
 
     <div class="auth-container p-4 p-md-5">
-        <div class="mac-dots">
-            <div class="dot dot-red"></div>
-            <div class="dot dot-yellow"></div>
-            <div class="dot dot-green"></div>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 pb-3 border-bottom border-white border-opacity-10">
             <div>
                 <h3 class="fw-bold text-white mb-1"><i class="bi bi-person-plus me-2 text-mint" style="color: var(--mint-accent);"></i>Student Self-Registration</h3>
                 <p class="text-white-50 small mb-0">Create your student account to access class attendance and fee receipts</p>
             </div>
-            <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm rounded-pill px-4 border-opacity-20">Already have an account? Login</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm rounded-pill px-4 border-opacity-20">Already registered? Log In</a>
         </div>
 
-        {% if error_msg %}
-        <div class="alert alert-danger border-0 bg-danger bg-opacity-20 text-white rounded-3 p-3 mb-4">
-            <i class="bi bi-exclamation-circle me-2"></i> {{ error_msg }}
-        </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger border-0 bg-danger bg-opacity-20 text-white rounded-3 p-3 mb-4">
+                    <i class="bi bi-exclamation-circle me-2"></i> {{ message }}
+                </div>
+            {% endfor %}
         {% endif %}
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label for="first_name" class="form-label text-white-50 small font-monospace">FIRST NAME</label>
+                    <label for="first_name" class="form-label text-white-50 small font-monospace">FIRST NAME *</label>
                     <input type="text" name="first_name" id="first_name" class="form-control form-control-nickelfox" placeholder="e.g. Rahul" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="last_name" class="form-label text-white-50 small font-monospace">LAST NAME</label>
+                    <label for="last_name" class="form-label text-white-50 small font-monospace">LAST NAME *</label>
                     <input type="text" name="last_name" id="last_name" class="form-control form-control-nickelfox" placeholder="e.g. Sharma" required>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="roll_number" class="form-label text-white-50 small font-monospace">ROLL NUMBER (USERNAME)</label>
+                    <label for="roll_number" class="form-label text-white-50 small font-monospace">ROLL NUMBER (YOUR LOGIN USERNAME) *</label>
                     <input type="text" name="roll_number" id="roll_number" class="form-control form-control-nickelfox" placeholder="e.g. 101" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="email" class="form-label text-white-50 small font-monospace">EMAIL ADDRESS</label>
+                    <label for="email" class="form-label text-white-50 small font-monospace">EMAIL ADDRESS *</label>
                     <input type="email" name="email" id="email" class="form-control form-control-nickelfox" placeholder="student@college.edu" required>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="password" class="form-label text-white-50 small font-monospace">PASSWORD</label>
-                    <input type="password" name="password" id="password" class="form-control form-control-nickelfox" placeholder="Choose a password" required>
+                    <label for="password" class="form-label text-white-50 small font-monospace">PASSWORD *</label>
+                    <input type="password" name="password" id="password" class="form-control form-control-nickelfox" placeholder="Choose password" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="department" class="form-label text-white-50 small font-monospace">DEPARTMENT</label>
+                    <label for="department" class="form-label text-white-50 small font-monospace">DEPARTMENT *</label>
                     <select name="department" id="department" class="form-select form-select-nickelfox" required>
                         <option value="">Select Department...</option>
                         <option value="Computer Science">Computer Science</option>
@@ -157,7 +138,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="year" class="form-label text-white-50 small font-monospace">ACADEMIC YEAR</label>
+                    <label for="year" class="form-label text-white-50 small font-monospace">ACADEMIC YEAR *</label>
                     <select name="year" id="year" class="form-select form-select-nickelfox" required>
                         <option value="1">First Year (FE)</option>
                         <option value="2">Second Year (SE)</option>
@@ -171,7 +152,7 @@
                 </div>
 
                 <div class="col-12 mt-4">
-                    <button type="submit" class="btn btn-nickelfox"><i class="bi bi-check-circle me-1"></i> Register Student Account</button>
+                    <button type="submit" class="btn btn-nickelfox"><i class="bi bi-check-circle me-1"></i> Complete Registration & Enter Dashboard</button>
                 </div>
             </div>
         </form>

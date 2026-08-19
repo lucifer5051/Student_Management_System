@@ -53,22 +53,6 @@
             flex-direction: column;
         }
 
-        .mac-dots {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 28px;
-            padding-left: 8px;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        .dot-red { background-color: #ff5f56; }
-        .dot-yellow { background-color: #ffbd2e; }
-        .dot-green { background-color: #27c93f; }
-
         .nav-link-nickelfox {
             display: flex;
             align-items: center;
@@ -210,12 +194,6 @@
 
         <!-- Main Expanded Sidebar -->
         <div class="sidebar-main d-none d-md-flex">
-            <div class="mac-dots">
-                <div class="dot dot-red"></div>
-                <div class="dot dot-yellow"></div>
-                <div class="dot dot-green"></div>
-            </div>
-
             <nav class="flex-grow-1">
                 <a href="{% url 'dashboard' %}" class="nav-link-nickelfox active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
                 <a href="{% url 'view_students' %}" class="nav-link-nickelfox"><i class="bi bi-people"></i> Students</a>

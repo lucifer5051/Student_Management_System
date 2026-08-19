@@ -14,15 +14,14 @@
             --mint-accent: #80eee0;
             --mint-glow: rgba(128, 238, 224, 0.25);
             --purple-accent: #a855f7;
-            --pink-accent: #ec4899;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(127, 0, 255, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.12) 0%, transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(127, 0, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.1) 0%, transparent 40%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -33,47 +32,31 @@
 
         .auth-container {
             width: 100%;
-            max-width: 1050px;
+            max-width: 1000px;
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 28px;
+            border-radius: 24px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
             overflow: hidden;
         }
 
         .hero-section {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.12) 0%, rgba(59, 130, 246, 0.12) 100%);
             border-right: 1px solid var(--card-border);
             padding: 48px;
             display: flex;
-            flex-column: column;
+            flex-direction: column;
             justify-content: space-between;
-            position: relative;
         }
-
-        .mac-dots {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        .dot-red { background-color: #ff5f56; }
-        .dot-yellow { background-color: #ffbd2e; }
-        .dot-green { background-color: #27c93f; }
 
         .feature-badge {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
-            padding: 12px 18px;
+            padding: 14px 18px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             margin-bottom: 12px;
         }
 
@@ -81,7 +64,6 @@
             padding: 48px;
         }
 
-        /* Nav Pills Switcher */
         .nav-pills-custom {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
@@ -173,43 +155,37 @@
             <!-- Left Hero Section -->
             <div class="col-lg-6 hero-section d-none d-lg-flex">
                 <div>
-                    <div class="mac-dots">
-                        <div class="dot dot-red"></div>
-                        <div class="dot dot-yellow"></div>
-                        <div class="dot dot-green"></div>
-                    </div>
-                    
                     <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-white bg-opacity-10 text-mint mb-4" style="color: var(--mint-accent);">
-                        <i class="bi bi-shield-check"></i> College Admin & Student Portal
+                        <i class="bi bi-mortarboard-fill"></i> College Portal
                     </div>
 
-                    <h2 class="fw-bold text-white display-6 mb-3">Welcome to College Portal</h2>
-                    <p class="text-white-50 lead fs-6 mb-4">A unified academic dashboard with real-time attendance analytics, student fee management, and performance tracking.</p>
+                    <h2 class="fw-bold text-white display-6 mb-3">College Portal</h2>
+                    <p class="text-white-50 lead fs-6 mb-4">Unified management system for student registration, fee receipts, class attendance, and academic performance tracking.</p>
 
                     <div class="feature-badge">
                         <div class="p-2 rounded-3 text-mint" style="background: rgba(128, 238, 224, 0.15); color: var(--mint-accent);">
                             <i class="bi bi-graph-up-arrow fs-5"></i>
                         </div>
                         <div>
-                            <h6 class="fw-semibold text-white mb-0">Real-Time Attendance Charts</h6>
-                            <small class="text-white-50">180° radial gauges & monthly spline analytics.</small>
+                            <h6 class="fw-semibold text-white mb-0">Attendance Analytics</h6>
+                            <small class="text-white-50">Radial gauges & monthly trend tracking.</small>
                         </div>
                     </div>
 
                     <div class="feature-badge">
                         <div class="p-2 rounded-3 text-purple" style="background: rgba(168, 85, 247, 0.15); color: var(--purple-accent);">
-                            <i class="bi bi-credit-card-2-front fs-5"></i>
+                            <i class="bi bi-receipt fs-5"></i>
                         </div>
                         <div>
-                            <h6 class="fw-semibold text-white mb-0">Instant Student Fee Receipts</h6>
-                            <small class="text-white-50">Pay fees online & download printable receipts.</small>
+                            <h6 class="fw-semibold text-white mb-0">Fee Receipts</h6>
+                            <small class="text-white-50">Online payments & printable receipts.</small>
                         </div>
                     </div>
                 </div>
 
                 <div class="pt-4 border-top border-white border-opacity-10 d-flex justify-content-between align-items-center">
                     <small class="text-white-50">© 2026 College Admin Portal</small>
-                    <span class="badge rounded-pill bg-success bg-opacity-20 text-success px-3 py-1">System Operational</span>
+                    <span class="badge rounded-pill bg-success bg-opacity-20 text-success px-3 py-1">System Live</span>
                 </div>
             </div>
 
