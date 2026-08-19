@@ -3,63 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Students - SMS Admin</title>
+    <title>Student Records - College Admin Portal</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         :root {
-            --bg-dark: #090d16;
-            --card-bg: rgba(255, 255, 255, 0.04);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --accent-purple: #a855f7;
-            --accent-blue: #3b82f6;
-            --accent-emerald: #10b981;
+            --bg-dark: #121620;
+            --card-bg: #1b2130;
+            --card-border: rgba(255, 255, 255, 0.06);
+            --mint-accent: #80eee0;
+            --mint-glow: rgba(128, 238, 224, 0.2);
+            --purple-accent: #a855f7;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e1035 100%);
-            min-height: 100vh;
+            background-color: var(--bg-dark);
             color: #f8fafc;
-            padding-bottom: 50px;
+            min-height: 100vh;
         }
 
-        .glass-nav {
-            background: rgba(9, 13, 22, 0.7);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--card-border);
-            sticky: top;
-            z-index: 100;
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar-rail {
+            width: 70px;
+            background: #0d1017;
+            border-right: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            gap: 24px;
+        }
+
+        .sidebar-main {
+            width: 230px;
+            background: #161b26;
+            border-right: 1px solid var(--card-border);
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mac-dots {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+            padding-left: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot-red { background-color: #ff5f56; }
+        .dot-yellow { background-color: #ffbd2e; }
+        .dot-green { background-color: #27c93f; }
+
+        .nav-link-nickelfox {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 12px 16px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+
+        .nav-link-nickelfox:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .nav-link-nickelfox.active {
+            background: var(--mint-accent);
+            color: #0f172a;
+            box-shadow: 0 4px 20px var(--mint-glow);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 28px 36px;
+            background: var(--bg-dark);
+            overflow-y: auto;
         }
 
         .bento-card {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
             border: 1px solid var(--card-border);
             border-radius: 20px;
             padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
         }
 
-        .avatar-sm {
-            width: 38px;
-            height: 38px;
+        .student-avatar-sm {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--accent-purple);
+            border: 2px solid var(--mint-accent);
         }
 
-        .avatar-placeholder-sm {
-            width: 38px;
-            height: 38px;
+        .student-avatar-placeholder-sm {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            background: linear-gradient(135deg, var(--mint-accent), var(--purple-accent));
+            color: #0f172a;
+            font-weight: bold;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            color: #fff;
-            font-size: 0.9rem;
         }
 
         .glass-table {
@@ -69,29 +132,29 @@
         }
 
         .glass-table th {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             border: none;
-            padding: 12px 16px;
+            padding: 10px 16px;
         }
 
         .glass-table td {
-            background: rgba(255, 255, 255, 0.03);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             padding: 14px 16px;
         }
 
         .glass-table tr td:first-child {
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 1px solid rgba(255, 255, 255, 0.04);
             border-top-left-radius: 12px;
             border-bottom-left-radius: 12px;
         }
 
         .glass-table tr td:last-child {
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.04);
             border-top-right-radius: 12px;
             border-bottom-right-radius: 12px;
         }
@@ -99,107 +162,113 @@
 </head>
 <body>
 
-    <!-- Top Navbar -->
-    <nav class="navbar glass-nav navbar-expand-lg py-3 mb-4">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand text-white fw-bold d-flex align-items-center gap-2" href="{% url 'dashboard' %}">
-                <i class="bi bi-shield-lock-fill text-purple fs-3" style="color: var(--accent-purple);"></i>
-                <span>College Admin<span class="text-purple" style="color: var(--accent-purple);">Portal</span></span>
-            </a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center gap-2">
-                    <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'dashboard' %}"><i class="bi bi-grid-1x2 me-1"></i> Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'add_student' %}"><i class="bi bi-person-plus me-1"></i> Add Student</a></li>
-                    <li class="nav-item"><a class="nav-link active text-white" href="{% url 'view_students' %}"><i class="bi bi-people me-1"></i> View Students</a></li>
-                    <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'search_student' %}"><i class="bi bi-search me-1"></i> Search</a></li>
-                    <li class="nav-item ms-3">
-                        <a class="btn btn-outline-danger btn-sm rounded-pill px-3" href="{% url 'logout' %}" onclick="return confirmLogout()"><i class="bi bi-box-arrow-right me-1"></i> Logout</a>
-                    </li>
-                </ul>
+    <div class="app-container">
+        <!-- Sidebar Rail -->
+        <div class="sidebar-rail d-none d-lg-flex">
+            <i class="bi bi-mortarboard-fill text-mint fs-3 mt-2" style="color: var(--mint-accent);"></i>
+            <a href="{% url 'dashboard' %}" class="text-white-50"><i class="bi bi-grid-1x2-fill fs-5"></i></a>
+            <a href="{% url 'view_students' %}" class="text-white"><i class="bi bi-people-fill fs-5" style="color: var(--mint-accent);"></i></a>
+            <a href="{% url 'view_fees' %}" class="text-white-50"><i class="bi bi-receipt fs-5"></i></a>
+            <a href="{% url 'logout' %}" class="text-danger mt-auto mb-4" onclick="return confirmLogout()"><i class="bi bi-box-arrow-right fs-5"></i></a>
+        </div>
+
+        <!-- Main Sidebar -->
+        <div class="sidebar-main d-none d-md-flex">
+            <div class="mac-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+            </div>
+
+            <nav class="flex-grow-1">
+                <a href="{% url 'dashboard' %}" class="nav-link-nickelfox"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+                <a href="{% url 'view_students' %}" class="nav-link-nickelfox active"><i class="bi bi-people"></i> Students</a>
+                <a href="{% url 'view_fees' %}" class="nav-link-nickelfox"><i class="bi bi-receipt"></i> Fee Payments</a>
+                <a href="{% url 'view_attendance' %}" class="nav-link-nickelfox"><i class="bi bi-calendar-check"></i> Attendance</a>
+                <a href="{% url 'add_marks' %}" class="nav-link-nickelfox"><i class="bi bi-journal-plus"></i> Add Marks</a>
+                <a href="{% url 'departments' %}" class="nav-link-nickelfox"><i class="bi bi-building"></i> Departments</a>
+            </nav>
+
+            <div class="pt-4 border-top border-white border-opacity-10">
+                <a href="{% url 'logout' %}" class="nav-link-nickelfox text-danger" onclick="return confirmLogout()"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
             </div>
         </div>
-    </nav>
 
-    <div class="container-fluid px-4">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-success border-0 bg-success bg-opacity-20 text-white rounded-3 p-3 mb-4">
-                    <i class="bi bi-check-circle me-2"></i> {{ message }}
+        <!-- Main Content View -->
+        <div class="main-content">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success border-0 bg-success bg-opacity-20 text-white rounded-3 p-3 mb-4">
+                        <i class="bi bi-check-circle me-2"></i> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <div>
+                    <h3 class="fw-bold mb-1 text-white"><i class="bi bi-people me-2 text-mint" style="color: var(--mint-accent);"></i>Student Records</h3>
+                    <p class="text-white-50 small mb-0">Manage registered students, view profiles, and update details</p>
                 </div>
-            {% endfor %}
-        {% endif %}
-
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h3 class="fw-bold mb-1"><i class="bi bi-people-fill me-2 text-purple" style="color: var(--accent-purple);"></i>Registered Students</h3>
-                <p class="text-white-50 small mb-0">View, manage, edit, and inspect all student accounts</p>
+                <div class="d-flex gap-2">
+                    <a class="btn btn-sm text-dark font-weight-bold px-4 rounded-pill fw-bold py-2" style="background: var(--mint-accent);" href="{% url 'add_student' %}"><i class="bi bi-person-plus-fill me-1"></i> Add New Student</a>
+                </div>
             </div>
-            <a href="{% url 'add_student' %}" class="btn btn-primary rounded-pill px-4" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); border: none;"><i class="bi bi-plus-lg me-1"></i> Add New Student</a>
-        </div>
 
-        <div class="bento-card">
-            <div class="table-responsive">
-                <table class="table glass-table align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>Student</th>
-                            <th>Roll Number</th>
-                            <th>Gender</th>
-                            <th>Department</th>
-                            <th>Academic Status</th>
-                            <th>Contact</th>
-                            <th class="text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for student in students %}
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
+            <div class="bento-card">
+                <div class="table-responsive">
+                    <table class="table glass-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Roll No</th>
+                                <th>Full Name</th>
+                                <th>Department</th>
+                                <th>Year</th>
+                                <th>Email</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td>
                                     {% if student.profile_image %}
-                                        <img src="{{ student.profile_image.url }}" class="avatar-sm" alt="{{ student.first_name }}">
+                                        <img src="{{ student.profile_image.url }}" alt="Avatar" class="student-avatar-sm">
                                     {% else %}
-                                        <div class="avatar-placeholder-sm">
+                                        <div class="student-avatar-placeholder-sm">
                                             {{ student.first_name|slice:":1" }}{{ student.last_name|slice:":1" }}
                                         </div>
                                     {% endif %}
-                                    <div>
-                                        <strong class="text-white d-block">{{ student.first_name }} {{ student.last_name }}</strong>
-                                        <small class="text-white-50">{{ student.email }}</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge bg-white bg-opacity-10 text-white font-monospace fs-6 px-3 py-2">{{ student.roll_number }}</span></td>
-                            <td><span class="text-white-50">{{ student.gender }}</span></td>
-                            <td><span class="badge bg-purple bg-opacity-20 text-purple rounded-pill px-3 py-1" style="background: rgba(168, 85, 247, 0.2); color: var(--accent-purple);">{{ student.department }}</span></td>
-                            <td><small class="text-white-50 d-block">{{ student.year }}</small><span class="text-white small">{{ student.semester }}</span></td>
-                            <td><span class="text-white-50 small"><i class="bi bi-telephone me-1"></i> {{ student.phone }}</span></td>
-                            <td class="text-center">
-                                <div class="d-flex gap-2 justify-content-center">
+                                </td>
+                                <td><span class="badge bg-white bg-opacity-10 text-white font-monospace">{{ student.roll_number }}</span></td>
+                                <td class="fw-semibold text-white">{{ student.first_name }} {{ student.last_name }}</td>
+                                <td><span class="badge bg-purple bg-opacity-20 text-purple rounded-pill px-3 py-1" style="background: rgba(168, 85, 247, 0.2); color: var(--purple-accent);">{{ student.department }}</span></td>
+                                <td>Year {{ student.year }}</td>
+                                <td class="text-white-50 small">{{ student.email }}</td>
+                                <td class="text-center">
                                     <a href="{% url 'student_profile' student.id %}" class="btn btn-sm btn-outline-info rounded-pill px-3"><i class="bi bi-eye"></i> View</a>
                                     <a href="{% url 'update_student' student.id %}" class="btn btn-sm btn-outline-warning rounded-pill px-3"><i class="bi bi-pencil"></i> Edit</a>
-                                    <a href="{% url 'delete_student' student.id %}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirmDelete('{{ student.roll_number }}')"><i class="bi bi-trash"></i> Delete</a>
-                                </div>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="7" class="text-center text-white-50 py-5">
-                                <i class="bi bi-inbox fs-1 d-block mb-2 text-white-50"></i>
-                                No student records found.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                                    <a href="{% url 'delete_student' student.id %}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Are you sure you want to delete this student?')"><i class="bi bi-trash"></i></a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center text-white-50 py-5">
+                                    <i class="bi bi-people fs-1 d-block mb-2 text-white-50"></i>
+                                    No student records found. Click "Add New Student" to get started.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
         </div>
     </div>
 
     <script>
-        function confirmDelete(rollNumber) {
-            return confirm("Are you sure you want to delete student with Roll Number " + rollNumber + "?");
-        }
         function confirmLogout() {
             return confirm("Are you sure you want to log out?");
         }
