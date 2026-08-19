@@ -1,6 +1,7 @@
 from datetime import date
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Student, FeePayment, Attendance, Mark
@@ -9,6 +10,10 @@ from .models import Student, FeePayment, Attendance, Mark
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
+    
+    # Ensure default admin exists
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
     
     error_msg = None
     if request.method == 'POST':
