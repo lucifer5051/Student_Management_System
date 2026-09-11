@@ -25,13 +25,23 @@ A beginner-friendly, clean, and responsive **Student Management System** designe
 
 ---
 
-### ✅ Step 1 — Install Required Python Package
+### ✅ Step 1 — Install All Required Packages
 
 ```bash
-pip install pymysql
+pip install -r requirements.txt
 ```
 
-**What it does:** Installs PyMySQL so Django can talk to your MySQL database.
+**What it does:** Installs all three required packages at once:
+- **Django 6.x** — the web framework that runs the server and templates
+- **PyMySQL** — lets Django connect to your MySQL database
+- **Pillow** — needed for student profile image uploads
+
+> If you only want to install manually one by one:
+> ```bash
+> pip install "Django>=6.0,<7.0"
+> pip install pymysql
+> pip install pillow
+> ```
 
 ---
 
@@ -124,19 +134,21 @@ python manage.py collectstatic
 
 ---
 
-### Backup for Step 1 — Install PyMySQL
+### Backup for Step 1 — Install Packages
 
 ```bash
 # If pip doesn't work, try pip3
-pip3 install pymysql
-
-# Install a specific stable version
-pip install pymysql==1.1.1
+pip3 install -r requirements.txt
 
 # Install inside a virtual environment
 python -m venv venv
 venv\Scripts\activate
-pip install pymysql
+pip install -r requirements.txt
+
+# Install each package manually
+pip install "Django>=6.0,<7.0"
+pip install pymysql==1.1.1
+pip install pillow
 ```
 
 ---
@@ -323,16 +335,32 @@ Maps every URL to the correct view function:
 
 | URL | View Function | Page |
 |-----|--------------|------|
-| `/` | `login_view` | Login Page |
-| `/logout/` | `logout_view` | Logout |
-| `/dashboard/` | `dashboard_view` | Dashboard |
+| `/` | `login_view` | Unified Login Page |
+| `/logout/` | `logout_view` | Admin Logout |
+| `/dashboard/` | `dashboard_view` | Admin Dashboard |
 | `/add/` | `add_student_view` | Add Student |
-| `/students/` | `view_students_view` | All Students |
+| `/students/` | `view_students_view` | All Students List |
+| `/student/<id>/` | `student_profile_view` | Student Profile |
 | `/update/<id>/` | `update_student_view` | Edit Student |
 | `/delete/<id>/` | `delete_student_view` | Delete Student |
-| `/search/` | `search_student_view` | Search Page |
+| `/search/` | `search_student_view` | Search Students |
+| `/fees/add/` | `add_fee_view` | Add Fee Payment |
+| `/fees/` | `view_fees_view` | All Fee Records |
+| `/fees/update/<id>/` | `update_fee_view` | Edit Fee Payment |
+| `/fees/delete/<id>/` | `delete_fee_view` | Delete Fee Payment |
+| `/fees/search/` | `search_fee_view` | Search Fee Records |
+| `/fees/receipt/<id>/` | `fee_receipt_view` | Print Fee Receipt |
+| `/attendance/add/` | `add_attendance_view` | Mark Attendance |
+| `/attendance/` | `view_attendance_view` | View Attendance |
+| `/marks/add/` | `add_marks_view` | Add Marks |
+| `/departments/` | `departments_view` | Departments List |
 | `/about/` | `about_view` | About Page |
 | `/contact/` | `contact_view` | Contact Page |
+| `/student/login/` | `student_login_view` | Student Login |
+| `/student/register/` | `student_register_view` | Student Register |
+| `/student/dashboard/` | `student_dashboard_view` | Student Dashboard |
+| `/student/pay-fee/` | `student_pay_fee_view` | Student Pay Fee |
+| `/student/logout/` | `student_logout_view` | Student Logout |
 
 ---
 
@@ -381,21 +409,22 @@ def get_all_students()     # SELECT all students from MySQL
 def update_student(...)    # UPDATE an existing student record
 def delete_student(id)     # DELETE a student by ID
 ```
-- Currently these functions are defined but not yet implemented (have `pass`)
-- The actual logic runs through Django's ORM in `views.py`
+- These are **standalone raw SQL helper functions** using PyMySQL directly
+- The main app logic runs through Django's ORM in `views.py`
+- These can be used independently to test database queries without Django
 
 #### `backend/search.py` — Search Logic
 ```python
 def search_students(search_by, keyword):
     # Filters students by name, roll number, or department
-    # Not yet implemented (has pass)
+    # Uses LIKE %keyword% SQL query via PyMySQL
 ```
 
 #### `backend/utils.py` — Dashboard Stats
 ```python
 def calculate_dashboard_stats():
-    # Calculates total students, male/female counts, departments
-    # Not yet implemented (has pass)
+    # Returns: total_students, total_depts, total_fees, total_attendance
+    # Queries smsapp_student and smsapp_feepayment tables directly
 ```
 
 ---
