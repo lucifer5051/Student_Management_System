@@ -17,7 +17,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'student_management.settings')
 django.setup()
 
 from django.test import Client
-from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
 
 # ------------------------------------------------------------------
@@ -95,13 +95,23 @@ def run_all_tests():
         results["MySQL Connection (root/root)"] = f"FAIL: {e}"
         print(f"[FAIL] MySQL Connection failed: {e}")
 
-    # Ensure Django admin user exists
-    admin_user = User.objects.filter(username='admin').first()
-    if not admin_user:
-        admin_user = User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
-    else:
-        admin_user.set_password('admin123')
-        admin_user.save()
+    # Ensure Django admin user exists with correct password (raw SQL, no ORM)
+    hashed_pw = make_password('admin123')
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id FROM auth_user WHERE username = 'admin'")
+            existing = cur.fetchone()
+            if existing:
+                cur.execute("UPDATE auth_user SET password = %s WHERE username = 'admin'", (hashed_pw,))
+            else:
+                cur.execute("""
+                    INSERT INTO auth_user (password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined)
+                    VALUES (%s, NULL, 1, 'admin', 'System', 'Administrator', 'admin@example.com', 1, 1, NOW())
+                """, (hashed_pw,))
+        conn.commit()
+    finally:
+        conn.close()
 
     # ---- FLOW 1: Admin Login & Student CRUD ----
     print("\n--- Testing Flow 1: Admin Login & Student CRUD ---")
