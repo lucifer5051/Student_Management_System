@@ -12,7 +12,7 @@ The Django ORM model classes below are kept ONLY so that:
   - Django migrations (0001–0005) can still run to track schema history
   - 'smsapp' can remain in INSTALLED_APPS without errors
 
-No application code imports or calls .objects on these models.
+No application code imports or performs queries on these models.
 """
 
 from django.db import models

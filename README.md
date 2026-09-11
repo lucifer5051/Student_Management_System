@@ -231,7 +231,7 @@ MySQL Database ← stores all student and admin records
 1. User fills form on `add_student.html` and clicks Submit
 2. Browser sends form data to Django
 3. `views.py` → `add_student_view()` reads the data, validates it
-4. Django saves the student into MySQL via `Student.objects.create()`
+4. View executes PyMySQL raw SQL: `INSERT INTO smsapp_student (...) VALUES (...)`
 5. User is redirected to `view_students.html` with a success message
 
 ---
@@ -320,7 +320,7 @@ This file handles **what happens when you visit each page**. It has 9 functions:
 - URL: `/search/`
 - Requires login
 - Reads `query` (search keyword) and `search_type` (`name`, `roll`, or `dept`) from URL
-- Filters students using Django's `icontains` (case-insensitive search)
+- Filters students using PyMySQL raw SQL with `LIKE %s`
 - Sends filtered results to `search_student.html`
 
 **9. `about_view` / `contact_view`**
@@ -410,7 +410,7 @@ def update_student(...)    # UPDATE an existing student record
 def delete_student(id)     # DELETE a student by ID
 ```
 - These are **standalone raw SQL helper functions** using PyMySQL directly
-- The main app logic runs through Django's ORM in `views.py`
+- The main app logic in `smsapp/views.py` also uses PyMySQL raw SQL (no Django ORM)
 - These can be used independently to test database queries without Django
 
 #### `backend/search.py` — Search Logic
