@@ -6,7 +6,6 @@
     <title>{{ student.first_name }}'s Dashboard - Student Portal</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
         :root {
             --bg-dark: #121620;
@@ -215,32 +214,61 @@
                 </div>
             </div>
 
-            <!-- Row 1: ApexCharts Attendance Radial Gauge + Trend Area Chart -->
+            <!-- Row 1: Attendance Progress and Statistics (HTML/CSS) -->
             <div class="row g-4 mb-4">
-                <!-- Nickelfox 180° Radial Semi-Donut Gauge -->
+                <!-- Attendance Percentage Card -->
                 <div class="col-lg-4">
-                    <div class="bento-card text-center">
+                    <div class="bento-card text-center p-4">
                         <h6 class="fw-bold text-white mb-1">Attendance Percentage</h6>
                         <small class="text-white-50">{{ present_days }} / {{ total_days }} Total Academic Days</small>
-                        <div id="studentAttendanceGauge" class="my-2"></div>
+                        <div class="my-3">
+                            <h1 class="display-4 fw-bold text-mint" style="color: var(--mint-accent);">{{ attendance_percentage|default:0 }}%</h1>
+                            <div class="progress bg-white bg-opacity-10 mt-3" style="height: 10px; border-radius: 5px;">
+                                <div class="progress-bar" style="width: {{ attendance_percentage|default:0 }}%; background: var(--mint-accent);"></div>
+                            </div>
+                        </div>
                         {% if attendance_percentage < 75 %}
-                            <span class="badge bg-danger bg-opacity-20 text-danger rounded-pill px-3 py-1"><i class="bi bi-exclamation-triangle me-1"></i> Attendance Warning (<75%)</span>
+                            <span class="badge bg-danger bg-opacity-20 text-danger rounded-pill px-3 py-1"><i class="bi bi-exclamation-triangle me-1"></i> Attendance Warning (&lt;75%)</span>
                         {% else %}
                             <span class="badge bg-success bg-opacity-20 text-success rounded-pill px-3 py-1"><i class="bi bi-check-circle me-1"></i> Good Standing</span>
                         {% endif %}
                     </div>
                 </div>
 
-                <!-- Spline Area Trend -->
+                <!-- Attendance Breakdown Card -->
                 <div class="col-lg-8">
-                    <div class="bento-card">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="bento-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
                             <div>
-                                <h6 class="fw-bold text-white mb-0">Attendance History Insights</h6>
-                                <small class="text-white-50">Monthly Class Attendance Log</small>
+                                <h6 class="fw-bold text-white mb-0">Attendance Status Breakdown</h6>
+                                <small class="text-white-50">Detailed class participation record</small>
+                            </div>
+                            <span class="badge bg-mint bg-opacity-20 text-mint rounded-pill px-3 py-1" style="background: rgba(128, 238, 224, 0.15); color: var(--mint-accent);">Updated Live</span>
+                        </div>
+
+                        <div class="row g-3 pt-2">
+                            <div class="col-sm-4">
+                                <div class="p-3 rounded-3 bg-white bg-opacity-5 text-center">
+                                    <small class="text-white-50 d-block font-monospace">DAYS PRESENT</small>
+                                    <h3 class="fw-bold text-success mb-0 mt-1">{{ present_days }}</h3>
+                                    <small class="text-white-50">Attended</small>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="p-3 rounded-3 bg-white bg-opacity-5 text-center">
+                                    <small class="text-white-50 d-block font-monospace">DAYS ABSENT</small>
+                                    <h3 class="fw-bold text-danger mb-0 mt-1">{{ absent_days }}</h3>
+                                    <small class="text-white-50">Missed</small>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="p-3 rounded-3 bg-white bg-opacity-5 text-center">
+                                    <small class="text-white-50 d-block font-monospace">TOTAL SESSIONS</small>
+                                    <h3 class="fw-bold text-white mb-0 mt-1">{{ total_days }}</h3>
+                                    <small class="text-white-50">Conducted</small>
+                                </div>
                             </div>
                         </div>
-                        <div id="studentTrendChart"></div>
                     </div>
                 </div>
             </div>
@@ -315,76 +343,5 @@
         </div>
     </div>
 
-    <script>
-        // ApexCharts 180° Radial Gauge
-        var optionsGauge = {
-            series: [{{ attendance_percentage|default:0 }}],
-            chart: {
-                type: 'radialBar',
-                height: 240,
-                offsetY: -10
-            },
-            plotOptions: {
-                radialBar: {
-                    startAngle: -90,
-                    endAngle: 90,
-                    track: {
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        strokeWidth: '97%',
-                    },
-                    dataLabels: {
-                        name: { show: false },
-                        value: {
-                            offsetY: -2,
-                            fontSize: '28px',
-                            fontWeight: 'bold',
-                            color: '#80eee0',
-                            formatter: function (val) { return val + "%"; }
-                        }
-                    }
-                }
-            },
-            fill: { colors: ['#80eee0'] },
-            stroke: { lineCap: 'round' }
-        };
-        var chartGauge = new ApexCharts(document.querySelector("#studentAttendanceGauge"), optionsGauge);
-        chartGauge.render();
-
-        // ApexCharts Monthly Area Spline
-        var optionsTrend = {
-            series: [{
-                name: 'Attendance %',
-                data: [80, 85, 90, 88, 92, {{ attendance_percentage|default:85 }}]
-            }],
-            chart: {
-                type: 'area',
-                height: 210,
-                toolbar: { show: false }
-            },
-            colors: ['#80eee0'],
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.4,
-                    opacityTo: 0.05,
-                    stops: [0, 100]
-                }
-            },
-            dataLabels: { enabled: false },
-            stroke: { curve: 'smooth', width: 3 },
-            xaxis: {
-                categories: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Current'],
-                labels: { style: { colors: 'rgba(255,255,255,0.4)' } }
-            },
-            yaxis: {
-                labels: { style: { colors: 'rgba(255,255,255,0.4)' } }
-            },
-            grid: { borderColor: 'rgba(255, 255, 255, 0.05)' },
-            tooltip: { theme: 'dark' }
-        };
-        var chartTrend = new ApexCharts(document.querySelector("#studentTrendChart"), optionsTrend);
-        chartTrend.render();
-    </script>
 </body>
 </html>
